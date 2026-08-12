@@ -1,0 +1,19 @@
+CompileFlags:
+  Add:
+    - -xc
+    - -D__3DS__
+    - -D__ARM_ARCH_6K__
+    - -I/opt/devkitpro/libctru/include
+    - -I/opt/devkitpro/portlibs/3ds/include
+    - -I/opt/devkitpro/portlibs/3ds/include/freetype2
+    - -I/opt/devkitpro/devkitARM/arm-none-eabi/include
+    - -Isource
+    - -Ivendor
+    - -std=gnu11
+  Remove:
+    - -march=*
+    - -mtune=*
+    - -mfloat-abi=*
+    - -mtp=*
+    - -mword-relocations
+    - -specs=*

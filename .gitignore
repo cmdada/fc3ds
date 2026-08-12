@@ -1,0 +1,8 @@
+build/
+*.3dsx
+*.smdh
+*.elf
+*.cia
+romfs/gfx/
+tests/run
+tools/cacert-full.pem

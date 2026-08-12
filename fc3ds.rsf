@@ -1,0 +1,177 @@
+# CIA build descriptor for makerom.
+#
+# The .3dsx build is fine for most things, but permissions are not one of them:
+# homebrew launched from hbmenu inherits whatever the launcher was entered with,
+# and anything the launcher was not granted -- the camera above all -- is
+# refused. A CIA carries its own access descriptor.
+
+BasicInfo:
+  Title                   : "Font Changer"
+  ProductCode             : "CTR-P-FC3D"
+  Logo                    : Nintendo
+
+TitleInfo:
+  Category                : Application
+  # Unique ID in the range reserved for homebrew, to avoid colliding with
+  # retail titles or with other homebrew that follows the same convention.
+  UniqueId                : 0xFCF23
+
+Option:
+  UseOnSD                 : true
+  FreeProductCode         : true
+  MediaFootPadding        : false
+  EnableCompress          : true
+  EnableCrypt             : false
+
+AccessControlInfo:
+  CoreVersion             : 2
+
+  UseExtSaveData          : false
+  # Runs on every model. Switch SystemModeExt to 124MB and CpuSpeed to 804MHz
+  # if this becomes a New-3DS-only app -- doing so makes the CIA unlaunchable on
+  # original hardware, so it is a decision, not a free upgrade.
+  SystemMode              : 64MB
+  SystemModeExt           : Legacy
+  CpuSpeed                : 268MHz
+  EnableL2Cache           : false
+  IdealProcessor          : 0
+  AffinityMask            : 1
+  Priority                : 16
+  MaxCpu                  : 0x9E
+
+  MemoryType              : Application
+  HandleTableSize         : 0x200
+  DisableDebug            : true
+  EnableForceDebug        : false
+  CanWriteSharedPage      : true
+  CanUsePrivilegedPriority: false
+  CanUseNonAlphabetAndNumber: true
+  PermitMainFunctionArgument: true
+  CanShareDeviceMemory    : true
+  RunnableOnSleep         : false
+  SpecialMemoryArrange    : true
+
+  # Installing a shared-font archive is a NAND title install, so this build
+  # needs more than an ordinary app. CtrNandRw and CtrNandRoWrite are what let
+  # AM commit the import; without them AM_StartCiaInstall(MEDIATYPE_NAND)
+  # returns an access error that reads like a broken CIA and is not.
+  FileSystemAccess:
+    - DirectSdmc
+    - CategorySystemApplication
+    - CategoryFileSystemTool
+    - CtrNandRo
+    - CtrNandRw
+    - CtrNandRoWrite
+  IORegisterMapping:
+    - 1ff00000-1ff7ffff
+  MemoryMapping:
+    - 1f000000-1f5fffff:r
+  SystemCallAccess:
+    ArbitrateAddress: 22
+    Break: 60
+    CancelTimer: 28
+    ClearEvent: 25
+    ClearTimer: 29
+    CloseHandle: 35
+    ConnectToPort: 45
+    ControlMemory: 1
+    CreateAddressArbiter: 33
+    CreateEvent: 23
+    CreateMemoryBlock: 30
+    CreateMutex: 19
+    CreateSemaphore: 21
+    CreateThread: 8
+    CreateTimer: 26
+    DuplicateHandle: 39
+    ExitProcess: 3
+    ExitThread: 9
+    GetCurrentProcessorNumber: 17
+    GetHandleInfo: 41
+    GetProcessId: 53
+    GetProcessIdOfThread: 54
+    GetProcessIdealProcessor: 6
+    GetProcessInfo: 43
+    GetResourceLimit: 56
+    GetResourceLimitCurrentValues: 58
+    GetResourceLimitLimitValues: 57
+    GetSystemInfo: 42
+    GetSystemTick: 40
+    GetThreadContext: 59
+    GetThreadId: 55
+    GetThreadIdealProcessor: 15
+    GetThreadInfo: 44
+    GetThreadPriority: 11
+    MapMemoryBlock: 31
+    OutputDebugString: 61
+    QueryMemory: 2
+    ReleaseMutex: 20
+    ReleaseSemaphore: 22
+    SendSyncRequest1: 46
+    SendSyncRequest2: 47
+    SendSyncRequest3: 48
+    SendSyncRequest4: 49
+    SendSyncRequest: 50
+    SetThreadPriority: 12
+    SetTimer: 27
+    SignalEvent: 24
+    SleepThread: 10
+    UnmapMemoryBlock: 32
+    WaitSynchronization1: 36
+    WaitSynchronizationN: 37
+  InterruptNumbers:
+  # Only the services actually used. Asking for one that is not needed is not
+  # free -- it is another thing a user has to trust, and another way the title
+  # differs from what the .3dsx build was tested with.
+  ServiceAccessControl:
+    - APT:U
+    # libctru's amInit() opens am:net; am:u is listed alongside it because the
+    # title-info queries on the Installed screen go through that one.
+    - am:net
+    - am:u
+    - cfg:u
+    - fs:USER
+    - gsp::Gpu
+    - gsp::Lcd
+    - hid:USER
+    - ptm:u
+    - pxi:dev
+    - ac:u
+    - ndm:u
+    - soc:U
+    - ssl:C
+    - cam:u
+    - y2r:u
+
+# Without this the romfs is silently omitted, so anything shipped in it is
+# missing from the installed build while the .3dsx build works fine. An easy
+# difference to miss.
+RomFs:
+  RootPath: $(APP_ROMFS)
+
+SystemControlInfo:
+  SaveDataSize: 0KB
+  RemasterVersion: 0
+  StackSize: 0x40000
+  Dependency:
+    ac: 0x0004013000002402
+    am: 0x0004013000001502
+    camera: 0x0004013000001602
+    cfg: 0x0004013000001702
+    codec: 0x0004013000001802
+    csnd: 0x0004013000002702
+    dsp: 0x0004013000001a02
+    gpio: 0x0004013000001b02
+    gsp: 0x0004013000001c02
+    hid: 0x0004013000001d02
+    http: 0x0004013000002902
+    mic: 0x0004013000002002
+    ndm: 0x0004013000002b02
+    news: 0x0004013000003502
+    nwm: 0x0004013000002d02
+    pdn: 0x0004013000002102
+    ps: 0x0004013000003102
+    ptm: 0x0004013000002202
+    ro: 0x0004013000003702
+    socket: 0x0004013000002e02
+    spi: 0x0004013000002302
+    ssl: 0x0004013000002f02
