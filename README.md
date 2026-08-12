@@ -1,5 +1,7 @@
-# fc3ds
-
+# fc3ds  
+### FBI QR Code: 
+<img src="tools/install-qr.png" width="200" alt="QR code for the latest fc3ds.cia">
+  
 Browse, preview and install 3DS system fonts on the console, over the network.
 Native homebrew — devkitARM, libctru, citro2d.
 
