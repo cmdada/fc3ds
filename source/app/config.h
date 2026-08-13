@@ -12,6 +12,23 @@
 #define FC_SIZE_ADJUST_MIN (-4)
 #define FC_SIZE_ADJUST_MAX 4
 
+/**
+ * Which keyboard a text prompt puts up.
+ *
+ * The system applet takes both screens and suspends the app until it is
+ * dismissed; the touch keyboard runs in-process on the bottom screen with the
+ * app still drawing above it. Anyone running a custom OSK on their console has
+ * replaced the applet, so FC_KEYBOARD_SYSTEM gets theirs.
+ */
+typedef enum {
+	FC_KEYBOARD_SYSTEM = 0,   ///< swkbdInputText.
+	FC_KEYBOARD_TOUCH  = 1,   ///< ctr-osk-rt, drawn by us.
+	FC_KEYBOARD_COUNT,
+} FcKeyboard;
+
+/// Display name for a keyboard choice, for the settings row.
+const char *fcKeyboardLabel(FcKeyboard kb);
+
 typedef struct FcConfig {
 	int  utcOffsetMinutes;
 
@@ -19,6 +36,9 @@ typedef struct FcConfig {
 	bool darkTheme;
 
 	bool swapEyes;
+
+	/// Which keyboard fcTextInputAsk() puts up.
+	FcKeyboard keyboard;
 
 	char catalogUrl[256];
 

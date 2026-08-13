@@ -21,3 +21,12 @@ make cia                      # needs bannertool and makerom
 ```
 
 Portlibs: `pacman -S 3ds-curl 3ds-mbedtls 3ds-zlib 3ds-freetype`.
+
+Vendored in `vendor/`: [cJSON](https://github.com/DaveGamble/cJSON) (MIT),
+[quirc](https://github.com/dlbeer/quirc) (ISC) and
+[ctr-osk-rt](https://github.com/cmdada/ctr-osk-rt) (GPL-3.0), the touch
+keyboard Settings can switch to.
+
+## License
+
+GPL-3.0. See [LICENSE](LICENSE).

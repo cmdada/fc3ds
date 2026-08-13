@@ -231,7 +231,7 @@ static void update(FcApp *app, float dt)
 		char q[sizeof s_browse.query];
 		snprintf(q, sizeof q, "%s", s_browse.query);
 
-		if (fcTextInputAsk("Family name", q, q, sizeof q)) {
+		if (fcTextInputAsk(app, "Family name", q, q, sizeof q)) {
 			snprintf(s_browse.query, sizeof s_browse.query, "%s", q);
 			refilter();
 			s_browse.scroll.offset = 0.0f;

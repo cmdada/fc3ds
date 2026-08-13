@@ -60,6 +60,14 @@ void fcFormatUtcOffset(int minutes, char *dst, size_t size)
 	snprintf(dst, size, "UTC%c%02d:%02d", sign, mag / 60, mag % 60);
 }
 
+const char *fcKeyboardLabel(FcKeyboard kb)
+{
+	switch (kb) {
+	case FC_KEYBOARD_TOUCH: return "Touch (ctr-osk)";
+	default:                return "3DS system";
+	}
+}
+
 void fcConfigDefaults(FcConfig *cfg)
 {
 	memset(cfg, 0, sizeof *cfg);
@@ -68,6 +76,7 @@ void fcConfigDefaults(FcConfig *cfg)
 	cfg->use24Hour        = false;
 	cfg->darkTheme        = true;
 	cfg->swapEyes         = false;
+	cfg->keyboard         = FC_KEYBOARD_SYSTEM;
 	cfg->slot             = 0;
 	cfg->fontSizeAdjust   = 0;
 	cfg->acknowledgedRisk = false;
@@ -135,6 +144,12 @@ bool fcConfigLoad(FcConfig *cfg)
 		cfg->swapEyes  = jsonBool(units, "swapEyes", cfg->swapEyes);
 		cfg->utcOffsetMinutes =
 			(int)jsonNum(units, "utcOffsetMinutes", cfg->utcOffsetMinutes);
+
+		/* Clamped rather than trusted: a hand-edited value outside the enum
+		 * would otherwise pick a keyboard that does not exist. */
+		const int kb = (int)jsonNum(units, "keyboard", cfg->keyboard);
+		cfg->keyboard = (kb > 0 && kb < FC_KEYBOARD_COUNT) ? (FcKeyboard)kb
+		                                                   : FC_KEYBOARD_SYSTEM;
 	}
 
 	const cJSON *fonts = cJSON_GetObjectItemCaseSensitive(root, "fonts");
@@ -176,6 +191,7 @@ bool fcConfigSave(const FcConfig *cfg)
 	cJSON_AddBoolToObject(units, "darkTheme", cfg->darkTheme);
 	cJSON_AddBoolToObject(units, "swapEyes", cfg->swapEyes);
 	cJSON_AddNumberToObject(units, "utcOffsetMinutes", cfg->utcOffsetMinutes);
+	cJSON_AddNumberToObject(units, "keyboard", cfg->keyboard);
 
 	cJSON *fonts = cJSON_AddObjectToObject(root, "fonts");
 	cJSON_AddStringToObject(fonts, "catalogUrl", cfg->catalogUrl);

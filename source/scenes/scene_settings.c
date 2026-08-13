@@ -63,7 +63,7 @@ static void update(FcApp *app, float dt)
 	char url[sizeof cfg->catalogUrl];
 	snprintf(url, sizeof url, "%s", cfg->catalogUrl);
 
-	if (fcTextInputAsk("Catalog address", url, url, sizeof url) && url[0]) {
+	if (fcTextInputAsk(app, "Catalog address", url, url, sizeof url) && url[0]) {
 		snprintf(cfg->catalogUrl, sizeof cfg->catalogUrl, "%s", url);
 		saveNow(app);
 		fcFontFeedRefresh(cfg->catalogUrl);
@@ -281,6 +281,13 @@ static void drawMainPage(FcApp *app, const FcDraw *d, float top)
 	if (toggleRow(app, d, y, "Swap 3D eyes", cfg->swapEyes)) {
 		cfg->swapEyes = !cfg->swapEyes;
 		app->stereo.swapEyes = cfg->swapEyes;
+		saveNow(app);
+	}
+	y += ROW_H;
+
+	/* Two choices, so the row cycles rather than opening a page of its own. */
+	if (settingRow(app, d, y, "Keyboard", fcKeyboardLabel(cfg->keyboard))) {
+		cfg->keyboard = (FcKeyboard)((cfg->keyboard + 1) % FC_KEYBOARD_COUNT);
 		saveNow(app);
 	}
 	y += ROW_H;

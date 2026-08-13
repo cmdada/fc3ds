@@ -59,7 +59,7 @@ static void update(FcApp *app, float dt)
 
 		fcQrStop(&s_scan.qr);
 
-		if (fcTextInputAsk("Font or catalog address", url, url, sizeof url))
+		if (fcTextInputAsk(app, "Font or catalog address", url, url, sizeof url))
 			acceptUrl(app, url);
 		return;
 	}

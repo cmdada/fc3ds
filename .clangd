@@ -9,6 +9,7 @@ CompileFlags:
     - -I/opt/devkitpro/devkitARM/arm-none-eabi/include
     - -Isource
     - -Ivendor
+    - -Ivendor/ctr-osk-rt/include
     - -std=gnu11
   Remove:
     - -march=*

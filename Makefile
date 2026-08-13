@@ -12,9 +12,9 @@ BUILD		:=	build
 SOURCES		:=	source source/app source/data source/ui source/scenes \
 			source/net \
 			source/qr vendor/quirc \
-			vendor/cjson
+			vendor/cjson vendor/ctr-osk-rt/source
 DATA		:=	data
-INCLUDES	:=	source vendor
+INCLUDES	:=	source vendor vendor/ctr-osk-rt/include
 GRAPHICS	:=	gfx
 ROMFS		:=	romfs
 GFXBUILD	:=	$(ROMFS)/gfx
